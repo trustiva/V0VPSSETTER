@@ -9,21 +9,48 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Shield, Zap, Globe, Check } from "lucide-react"
+import { PaymentModal } from "@/components/payment-modal"
 
 export default function LandingPage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false)
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+  const [selectedPlan, setSelectedPlan] = useState<any>(null)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     telegram: "",
   })
 
+  const plans = [
+    {
+      name: "Basic",
+      price: 5,
+      currency: "USD",
+      features: ["50 Mbps Speed", "Basic Support", "1 Device"],
+    },
+    {
+      name: "Pro",
+      price: 10,
+      currency: "USD",
+      features: ["100 Mbps Speed", "Priority Support", "3 Devices", "Auto IP Rotation"],
+    },
+    {
+      name: "Premium",
+      price: 20,
+      currency: "USD",
+      features: ["200 Mbps Speed", "24/7 Support", "Unlimited Devices", "Dedicated IP"],
+    },
+  ]
+
+  const handlePlanSelect = (plan: any) => {
+    setSelectedPlan(plan)
+    setIsPaymentOpen(true)
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
     console.log("Waitlist signup:", formData)
     setIsWaitlistOpen(false)
-    // Show success message
     alert("شما با موفقیت در لیست انتظار قرار گرفتید! / You have been successfully added to the waitlist!")
   }
 
@@ -54,58 +81,69 @@ export default function LandingPage() {
           {/* English Subheading */}
           <p className="text-xl mb-8 text-blue-200">Access a stable connection from anywhere—no setup required</p>
 
-          <Dialog open={isWaitlistOpen} onOpenChange={setIsWaitlistOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-black font-bold px-8 py-4 text-lg">
-                Join Early Access / پیوستن به دسترسی زودهنگام
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-slate-800 text-white border-slate-700">
-              <DialogHeader>
-                <DialogTitle className="text-center text-xl">Join the Waitlist / پیوستن به لیست انتظار</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Name / نام</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="bg-slate-700 border-slate-600 text-white"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email / ایمیل</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="bg-slate-700 border-slate-600 text-white"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="telegram">Telegram ID (Optional) / آیدی تلگرام (اختیاری)</Label>
-                  <Input
-                    id="telegram"
-                    value={formData.telegram}
-                    onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
-                    className="bg-slate-700 border-slate-600 text-white"
-                    placeholder="@username"
-                  />
-                </div>
-                <p className="text-sm text-blue-200 text-center" dir="rtl" lang="fa">
-                  زمانی که سرویس آماده شد، از طریق تلگرام/ایمیل به شما اطلاع خواهیم داد
-                </p>
-                <p className="text-sm text-blue-200 text-center">We'll notify you via Telegram/email when ready</p>
-                <Button type="submit" className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold">
-                  Join Waitlist / پیوستن به لیست
+          <div className="flex gap-4 justify-center">
+            <Dialog open={isWaitlistOpen} onOpenChange={setIsWaitlistOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-black font-bold px-8 py-4 text-lg">
+                  Join Early Access / پیوستن به دسترسی زودهنگام
                 </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+              </DialogTrigger>
+              <DialogContent className="bg-slate-800 text-white border-slate-700">
+                <DialogHeader>
+                  <DialogTitle className="text-center text-xl">Join the Waitlist / پیوستن به لیست انتظار</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Name / نام</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="bg-slate-700 border-slate-600 text-white"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email / ایمیل</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="bg-slate-700 border-slate-600 text-white"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="telegram">Telegram ID (Optional) / آیدی تلگرام (اختیاری)</Label>
+                    <Input
+                      id="telegram"
+                      value={formData.telegram}
+                      onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
+                      className="bg-slate-700 border-slate-600 text-white"
+                      placeholder="@username"
+                    />
+                  </div>
+                  <p className="text-sm text-blue-200 text-center" dir="rtl" lang="fa">
+                    زمانی که سرویس آماده شد، از طریق تلگرام/ایمیل به شما اطلاع خواهیم داد
+                  </p>
+                  <p className="text-sm text-blue-200 text-center">We'll notify you via Telegram/email when ready</p>
+                  <Button type="submit" className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold">
+                    Join Waitlist / پیوستن به لیست
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-black font-bold px-8 py-4 text-lg"
+              onClick={() => document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              View Pricing / مشاهده قیمت‌ها
+            </Button>
+          </div>
         </div>
 
         {/* 404 Illustration */}
@@ -148,9 +186,9 @@ export default function LandingPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-center text-blue-200">Crypto (USDT, Bitcoin) or local methods</p>
+                <p className="text-center text-blue-200">Shaparak (IRR) or Crypto (USDT, Bitcoin)</p>
                 <p className="text-center text-blue-200 text-sm" dir="rtl" lang="fa">
-                  کریپتو یا روش‌های محلی
+                  شاپرک (ریال) یا کریپتو
                 </p>
               </CardContent>
             </Card>
@@ -175,100 +213,48 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Table */}
-      <section className="px-4 py-16">
+      <section id="pricing" className="px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h3 className="text-3xl font-bold text-center mb-12">Workspace Plans / پلان‌های فضای کاری</h3>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <Card className="bg-slate-700/50 border-slate-600 text-white">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">Basic</CardTitle>
-                <CardTitle className="text-lg" dir="rtl" lang="fa">
-                  پایه
-                </CardTitle>
-                <div className="text-3xl font-bold text-amber-400">$5</div>
-                <div className="text-sm text-blue-200">per month in USDT</div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    50 Mbps Speed
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    Basic Support
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />1 Device
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-b from-amber-500/20 to-slate-700/50 border-amber-400 text-white relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-black px-4 py-1 rounded-full text-sm font-bold">
-                Most Popular
-              </div>
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">Pro</CardTitle>
-                <CardTitle className="text-lg" dir="rtl" lang="fa">
-                  حرفه‌ای
-                </CardTitle>
-                <div className="text-3xl font-bold text-amber-400">$10</div>
-                <div className="text-sm text-blue-200">per month in USDT</div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    100 Mbps Speed
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    Priority Support
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />3 Devices
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    Auto IP Rotation
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-700/50 border-slate-600 text-white">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">Premium</CardTitle>
-                <CardTitle className="text-lg" dir="rtl" lang="fa">
-                  پریمیوم
-                </CardTitle>
-                <div className="text-3xl font-bold text-amber-400">$20</div>
-                <div className="text-sm text-blue-200">per month in USDT</div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    200 Mbps Speed
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    24/7 Support
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    Unlimited Devices
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="w-4 h-4 mr-2 text-green-400" />
-                    Dedicated IP
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
+            {plans.map((plan, index) => (
+              <Card
+                key={plan.name}
+                className={`bg-slate-700/50 border-slate-600 text-white ${index === 1 ? "bg-gradient-to-b from-amber-500/20 to-slate-700/50 border-amber-400 relative" : ""}`}
+              >
+                {index === 1 && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-black px-4 py-1 rounded-full text-sm font-bold">
+                    Most Popular
+                  </div>
+                )}
+                <CardHeader className="text-center">
+                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                  <CardTitle className="text-lg" dir="rtl" lang="fa">
+                    {plan.name === "Basic" ? "پایه" : plan.name === "Pro" ? "حرفه‌ای" : "پریمیوم"}
+                  </CardTitle>
+                  <div className="text-3xl font-bold text-amber-400">${plan.price}</div>
+                  <div className="text-sm text-blue-200">per month</div>
+                  <div className="text-xs text-slate-400">≈ {(plan.price * 50000).toLocaleString()} تومان</div>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 mb-6">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-center">
+                        <Check className="w-4 h-4 mr-2 text-green-400" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <Button
+                    onClick={() => handlePlanSelect(plan)}
+                    className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold"
+                  >
+                    Choose Plan / انتخاب پلان
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -305,6 +291,16 @@ export default function LandingPage() {
           فضای کاری خصوصی - امن، سریع، قابل اعتماد
         </p>
       </footer>
+
+      {/* Payment Modal */}
+      {selectedPlan && (
+        <PaymentModal
+          isOpen={isPaymentOpen}
+          onClose={() => setIsPaymentOpen(false)}
+          plan={selectedPlan}
+          userInfo={formData}
+        />
+      )}
     </div>
   )
 }
